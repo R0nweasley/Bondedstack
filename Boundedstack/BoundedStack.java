@@ -20,7 +20,6 @@ import java.util.Set;
  *  isEmty() เช็กว่าว่างมั้ย
  *  
  *  
- * 
  * Creators / Producers / Observers / Mutators
  * Representation Invariant (RI) และตรวจสอบด้วย checkRep()
  */
@@ -56,7 +55,7 @@ public class BoundedStack {
             for (String s : Book) {
             assert s!=null ;
             assert !(s=="") ;
-            assert seen.add(s) : "Dupplicate song" +s;
+            assert seen.add(s);
         }
         
     }
@@ -70,6 +69,7 @@ public class BoundedStack {
         public BoundedStack(){
             this.Book = new ArrayList<>();
             checkRep();
+            System.out.println(Book.size());
         }
 
          // ===== Creator 2 =====
@@ -90,12 +90,31 @@ public class BoundedStack {
         }
   
 
-        //  ===== Mutators =====
-        public void push(){
-            
+        //  ===== Mutators เพิ่มสมาชิก=====
+        /*
+        @param element สมาชิกที่จะเพิ่ม
+        @throws IllegalArgumentException ถ้า element เป็น null
+        @throws IllegalStateException ถ้า stack เต็มแล้ว
+         */
+        public void push(String name_book){
+            if (name_book == null) throw new IllegalArgumentException(); // != null 
+            if (Book.contains(name_book))  throw new IllegalStateException(); //ไม่ซ้ำ
+            if (Book.size()==Bound)  throw new IllegalStateException(); // เกินขอบเขต
+           
+            Book.add(name_book);
+            checkRep();
         }
+
+
+        //  ===== Mutators 2 ลบสมาชิกตัวบนสุด =====
+        /*
+        @throws IllegalStateException ถ้า stack ไม่มีอะไรให้ลบ
+         */
         public void pop(){
-            
+            if(Book.isEmpty()) throw new IllegalStateException();
+
+            Book.remove(Book.size()-1); // ลบหนังสือตัวบนสุด ต้อง -1 เพราะอาเรย์นับเป็น 0 1 2 
+            checkRep();
         }
 
 
@@ -110,7 +129,16 @@ public class BoundedStack {
             
         }
 
+
+
+        // ไม่เกี่ยวสร้างมาเทสเอง
+        public int getsize(){
+            return Book.size();
+        }
+
+
+
         //  ===== Producer =====
 
-
+        
 }

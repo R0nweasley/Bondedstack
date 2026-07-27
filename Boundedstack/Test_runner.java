@@ -27,10 +27,19 @@ public class Test_runner {
             System.out.println("WARNING: assertions disabled"
                     + " - re-run with: java -ea PlaylistTest\n");
         }
+
+
+
+        // TEST เอง
+        BoundedStack a = new BoundedStack();
+        a.push("Harry");
+        System.out.println(a.getsize());
+        a.push("ASD");
+        a.push("null");
+         System.out.println(a.getsize());
+        a.pop();
+        System.out.println(a.getsize());
     }
-
-
-
 
 }
 
