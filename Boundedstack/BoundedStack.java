@@ -119,14 +119,14 @@ public class BoundedStack {
 
 
         //  =====Observers =====
-        public void peek(){
-            
+        public String peek(){
+            return Book.get(Book.size()-1);
         }
-        public void isEmpty(){
-            
+        public Boolean isEmpty(){
+            return Book.isEmpty();
         }
-        public void isFull(){
-            
+        public Boolean isFull(){
+            return Book.size() == Bound;
         }
 
 

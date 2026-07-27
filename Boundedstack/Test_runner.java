@@ -28,8 +28,6 @@ public class Test_runner {
                     + " - re-run with: java -ea PlaylistTest\n");
         }
 
-
-
         // TEST เอง
         BoundedStack a = new BoundedStack();
         a.push("Harry");
@@ -39,8 +37,51 @@ public class Test_runner {
          System.out.println(a.getsize());
         a.pop();
         System.out.println(a.getsize());
+        System.out.println(a.peek());
+        a.push("lookkaree");
+        System.out.println(a.peek());
+        System.out.println(a.isEmpty());
+
+        System.out.println("=== Playlist Test Suite ===\n");
+
+        testCreators();
+        testAdd();
+        testRemove();
+        testObservers();
+        testProducer();
+        testExposure();
+
+        System.out.println("\n=== Summary ===");
+        System.out.println("pass: " +pass);
+        System.out.println("fail: " + fail);
+        System.out.println("Total : " + (pass + fail));
+        System.out.println(fail == 0 ? "ALL TESTSpass" : "SOME TESTS fail");
+
+        if (fail > 0) {
+            System.exit(1);
+        }
     }
 
+    private static void testCreators(){
+        
+    }
+    private static void testAdd(){
+
+    }
+    private static void testRemove(){
+
+    }
+    private static void testObservers(){
+
+    }
+    private static void testProducer(){
+
+    }
+    private static void testExposure(){
+
+    }
+
+    
 }
 
 
