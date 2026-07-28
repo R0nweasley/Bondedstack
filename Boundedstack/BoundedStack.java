@@ -126,7 +126,7 @@ public class BoundedStack {
             book.remove(book.size()-1); // ลบหนังสือตัวบนสุด ต้อง -1 เพราะอาเรย์นับเป็น 0 1 2 
             
             checkRep();
-            return "result";
+            return result;
         }
 
 

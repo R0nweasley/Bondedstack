@@ -38,6 +38,10 @@ public class Test_runner {
         testPush();
         testPop();
         
+        BoundedStack p = new BoundedStack(3);
+        p.push("A");
+        p.push("B");
+        p.push("C");
         
         // testObservers();
         // testProducer();
