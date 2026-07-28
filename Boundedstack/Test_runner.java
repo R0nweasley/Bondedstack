@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.List;
 
 public class Test_runner {
@@ -25,32 +26,24 @@ public class Test_runner {
         assert assertsOn = true;
         if (!assertsOn) {
             System.out.println("WARNING: assertions disabled"
-                    + " - re-run with: java -ea PlaylistTest\n");
+                    + " - re-run with: java -ea Test_runner\n");
         }
 
-        // TEST เอง
-        BoundedStack a = new BoundedStack();
-        a.push("Harry");
-        System.out.println(a.getsize());
-        a.push("ASD");
-        a.push("null");
-         System.out.println(a.getsize());
-        a.pop();
-        System.out.println(a.getsize());
-        System.out.println(a.peek());
-        a.push("lookkaree");
-        System.out.println(a.peek());
-        System.out.println(a.isEmpty());
+       
+        System.out.println("=== BoundedStack Test Suite ===\n");
 
-        System.out.println("=== Playlist Test Suite ===\n");
-
+        
         testCreators();
-        testAdd();
-        testRemove();
-        testObservers();
-        testProducer();
-        testExposure();
-
+        testPeek();
+        testPush();
+        testPop();
+        
+        
+        // testObservers();
+        // testProducer();
+        
+        
+        
         System.out.println("\n=== Summary ===");
         System.out.println("pass: " +pass);
         System.out.println("fail: " + fail);
@@ -62,26 +55,73 @@ public class Test_runner {
         }
     }
 
-    private static void testCreators(){
+
+
+  
+
+     private static void testCreators() {
+        // ชั้นหนังสือว่างไม่มีหนังสือจริงมั้ย
+        BoundedStack stack = new BoundedStack(10);
+        check("Create New Stack must be Empty", stack.isEmpty() );
+        check("stack size = 0", stack.getSize() == 0);
+
+        // capacity > 0
+        boolean threwnNull = false;
+        try {
+             new BoundedStack(0);
+        } catch (IllegalArgumentException e) {
+            threwnNull= true;
+        } check("capcity > 0", threwnNull);
         
-    }
-    private static void testAdd(){
+     }
 
-    }
-    private static void testRemove(){
 
-    }
-    private static void testObservers(){
-
-    }
-    private static void testProducer(){
-
-    }
-    private static void testExposure(){
-
+    private static void testPeek() {
+        check("Show last book",
+                new BoundedStack(List.of("A", "B", "C"), 3).peek().equals("C"));
     }
 
+
+    private static void testPush() {
+        boolean thewNull = false;
+        try {
+            BoundedStack a = new BoundedStack(4);
+            a.push("");
+        } catch (Exception e) {
+            thewNull = true;
+        }  check("namebook is empty string ", thewNull);
+
+
+        BoundedStack a = new BoundedStack(List.of("A","B","C"),3);
+        check("size = 3", a.getSize()==3);
+  
+
+
+
+    }   
     
+
+
+
+
+
+    private static void testPop() {
+       
+    }
+
+    private static void testObservers() {
+        throw new UnsupportedOperationException("Unimplemented method 'testObservers'");
+    }
+
+
+
+     private static void testProducer() {
+        throw new UnsupportedOperationException("Unimplemented method 'testProducer'");
+    }
+
+
+
+
 }
 
 
