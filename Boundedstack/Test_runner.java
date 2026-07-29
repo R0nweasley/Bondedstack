@@ -218,7 +218,7 @@ public class Test_runner {
     check("stack ยังไม่เต็ม ต้อง isFull = false", f2.isFull() == false);
 
         BoundedStack f3 = new BoundedStack(List.of("A"), 1);
-    check("capacity = 0 (สร้างมาก็เต็มแล้ว) ต้อง isFull = true", f3.isFull() == true);
+    check("capacity = 1 (สร้างมาก็เต็มแล้ว) ต้อง isFull = true", f3.isFull() == true);
 
          BoundedStack f4 = new BoundedStack(List.of(), 3);
      check("stack ว่าง ต้อง isFull = false", f4.isFull() == false);
