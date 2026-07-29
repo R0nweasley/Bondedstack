@@ -13,12 +13,14 @@ import java.util.Set;
  *          "B"
  *          "A"   ]
  * 
- *  BounedStack ตัวอย่างการใช้งาน
+ *  BounededStack ตัวอย่างการใช้งาน
  *  push()   เพิ่มข้อมูลไว้บนสุด
  *  pop()    ลบตัวบนสุด
  *  peek()   อ่านข้อมูลตัวบนสุด
- *  isEmty() เช็กว่าว่างมั้ย
- *  
+ *  isEmpty() เช็กว่าว่างมั้ย
+ *  isFull()  เช็กว่าเต็มมั้ย
+ *  getSize() คืนจำนวนหนังสือปัจจุบัน
+ *  copy()    สร้างสแตกใหม่จากเนื้อหาปัจจุบัน
  *  
  * Creators / Producers / Observers / Mutators
  * Representation Invariant (RI) และตรวจสอบด้วย checkRep()
@@ -26,35 +28,38 @@ import java.util.Set;
 
 public class BoundedStack {
         
-        public static final int Bound = 10  ;
         
          // ===== representation =====
-        private final List<String> Book;   
+        private final List<String> book;  
+        private final int capacity ;
+
         /**
          * Abstraction Function:
-         * AF(info) = ลำดับข้อมูล เช่น [info1 , info2 , info3] โดยลำดับมีความหมาย — ข้อมูลต้องเรียงโชว์ตามลำดับ
-         * 
-         * 
+         * AF(book, capacity) = สแตกความจุ capacity เล่ม โดย 
+         * book.get(0) คือหนังสือล่างสุด (เข้าก่อน)
+         * book.get(book.size()-1) คือหนังสือบนสุด (เข้าล่าสุด พร้อมถูก pop/peek)
+        
          * 
          * Representation Invariant(RI):
          * 1 ห้าม Null
          * 2 ไม่เป็นสตริงว่าง ""
-         * 3 Book ไม่ซ้ำกัน
-         * 4 ใส่ข้อมูลไม่เกิน Bound (ขอบเขต)
-         * 
-      
+         * 3 book ไม่ซ้ำกัน
+         * 4 จำนวนข้อมูลในbook ต้องไม่เกิน capacity
+         * 5 capacity ต้องมากกว่า 0
+        */
 
          // ===== Checkrep =====
         /*
            แปลง  RI --> assert    
          */
-        public void checkRep(){
-            assert Book != null : "Book's not null";
-            assert Book.size() <= Bound;
+        private void checkRep(){
+            assert book != null : "book's not null";
+            assert capacity > 0;
+            assert book.size() <= capacity;
             Set<String> seen = new HashSet<>();
-            for (String s : Book) {
+            for (String s : book) {
             assert s!=null ;
-            assert !(s=="") ;
+            assert !(s.isEmpty());
             assert seen.add(s);
         }
         
@@ -63,45 +68,58 @@ public class BoundedStack {
 
         // ===== Creator =====
         /*
-            สร้างที่เก็บหนังสือ boundedStack
+            สร้างแสตกว่างเปล่า
+            @param capacity ความจุสูงสุดของ stack ต้องมากกว่า 0
+            @throws IllegalArgumentException ถ้า capacity <= 0
         */
-
-        public BoundedStack(){
-            this.Book = new ArrayList<>();
-            checkRep();
-            System.out.println(Book.size());
-        }
-
-         // ===== Creator 2 =====
-        /*
-            รับชื่อหนังสือมาสร้างที่เก็บ
-         */
-
-        public BoundedStack(List<String> name_book){
-            if (name_book == null||name_book.size()>Bound ) throw new IllegalArgumentException();
-            Set<String> seen = new HashSet<>();
-            for (String s : name_book) {
-            if(s==null||s=="") throw new IllegalArgumentException();
-            if(!seen.add(s)) throw new IllegalArgumentException();
-        }
-
-        this.Book = new ArrayList<>(name_book);  // แก้บรรทัดนี้
+       public BoundedStack(int capacity) {
+        if (capacity <= 0) throw new IllegalArgumentException();
+        this.capacity = capacity;
+        this.book = new ArrayList<>();
         checkRep();
-        }
+    }
+
+        // ===== Creator 2 =====
+        /*
+            สร้างแสตกจาก list ที่มีอยู่แล้ว
+        @param capacity ต้อง >0 namebook ต้อง != null และ size <= capacity
+        @throws IllegalArgumentException ถ้า capacity  <= 0
+        @throws IllegalArgumentException ถ้า namebook = null
+        @throws IllegalArgumentException ถ้า namebook.size > capacity
+        @throws IllegalArgumentException ถ้า เพิ่มbook ที่เป็น null หรือ empty
+
+         */
+         public BoundedStack(List<String> nameBook, int capacity) {
+         if (capacity <= 0) throw new IllegalArgumentException(); // เหตุผลเดียวกับ constructor แรก
+         if (nameBook == null) throw new IllegalArgumentException();
+         if (nameBook.size() > capacity) throw new IllegalArgumentException(); // ล้นความจุที่กำหนด
+
+         Set<String> seen = new HashSet<>();
+         for (String s : nameBook) {
+         if (s == null || s.isEmpty()) throw new IllegalArgumentException();
+         if (!seen.add(s)) throw new IllegalArgumentException();
+         }
+
+         this.capacity = capacity;
+         this.book = new ArrayList<>(nameBook);
+         checkRep();
+     }
+
   
 
         //  ===== Mutators เพิ่มสมาชิก=====
-        /*
+        /*       
         @param element สมาชิกที่จะเพิ่ม
-        @throws IllegalArgumentException ถ้า element เป็น null
+        @throws IllegalArgumentException ถ้า element เป็น null 
+        @throws IllegalArgumentException ถ้า element ซ้ำกับที่มีอยู่แล้ว
         @throws IllegalStateException ถ้า stack เต็มแล้ว
          */
-        public void push(String name_book){
-            if (name_book == null) throw new IllegalArgumentException(); // != null 
-            if (Book.contains(name_book))  throw new IllegalStateException(); //ไม่ซ้ำ
-            if (Book.size()==Bound)  throw new IllegalStateException(); // เกินขอบเขต
+        public void push(String nameBook){
+            if (nameBook == null || nameBook.equals("")) throw new IllegalArgumentException(); // != null 
+            if (book.contains(nameBook))  throw new IllegalArgumentException(); //ไม่ซ้ำ
+            if (book.size()==capacity) throw new IllegalStateException(); // เกินขอบเขต
            
-            Book.add(name_book);
+            book.add(nameBook);
             checkRep();
         }
 
@@ -110,35 +128,61 @@ public class BoundedStack {
         /*
         @throws IllegalStateException ถ้า stack ไม่มีอะไรให้ลบ
          */
-        public void pop(){
-            if(Book.isEmpty()) throw new IllegalStateException();
-
-            Book.remove(Book.size()-1); // ลบหนังสือตัวบนสุด ต้อง -1 เพราะอาเรย์นับเป็น 0 1 2 
+        public String pop(){
+            if(book.isEmpty()) throw new IllegalStateException();
+            String result = book.get(book.size()-1);
+            book.remove(book.size()-1); // ลบหนังสือตัวบนสุด ต้อง -1 เพราะอาเรย์นับเป็น 0 1 2 
+            
             checkRep();
+            return result;
         }
 
 
         //  =====Observers =====
+        /*
+        @return สมาชิกบนสุดของ stack
+        @throws IllegalStateException ถ้า stack ว่าง
+        */
         public String peek(){
-            return Book.get(Book.size()-1);
+            if(book.isEmpty()) throw new IllegalStateException();
+            return book.get(book.size()-1);
         }
+        /*
+        ตรวจสอบว่าแสตกว่าว่างหรือไม่
+        @return true ถ้าแสตกว่าง
+        */
         public Boolean isEmpty(){
-            return Book.isEmpty();
+            return book.isEmpty();
         }
+        /*
+        ตรวจสอบว่าแสตกว่าเต็มหรือไม่
+        @return true ถ้าแสตกเต็ม
+        */
         public Boolean isFull(){
-            return Book.size() == Bound;
+            return book.size() == capacity;
         }
-
-
-
-        // ไม่เกี่ยวสร้างมาเทสเอง
-        public int getsize(){
-            return Book.size();
+        /*
+        คืนจำนวนหนังสือที่อยู่ใน stack ขณะนี้
+        @return จำนวนหนังสือ (0 ถึง capacity)
+        */
+        public int getSize(){
+            return book.size();
         }
-
+       
 
 
         //  ===== Producer =====
+        /*
+            สร้างสแตกใหม่จากเนื้อหาปัจจุบัน พร้อมกำหนดความจุใหม่
+            @param newCapacity ความจุของสแตกใหม่ ต้อง > 0 และ >= จำนวนหนังสือปัจจุบัน
+            @throws IllegalArgumentException ถ้า newCapacity <= 0
+            @throws IllegalArgumentException ถ้า newCapacity น้อยกว่าจำนวนหนังสือที่มีอยู่
+        */
+       
+        public BoundedStack copy(int newCapacity) {
+             if (newCapacity <= 0) throw new IllegalArgumentException();
+             return new BoundedStack(this.book, newCapacity);
+         }
 
         
 }
