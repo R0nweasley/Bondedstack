@@ -126,6 +126,7 @@ public class BoundedStack {
 
         //  ===== Mutators 2 ลบสมาชิกตัวบนสุด =====
         /*
+        @return สมาชิกตัวบนสุด แล้วลบออก
         @throws IllegalStateException ถ้า stack ไม่มีอะไรให้ลบ
          */
         public String pop(){
