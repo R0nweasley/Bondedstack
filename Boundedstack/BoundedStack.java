@@ -69,6 +69,8 @@ public class BoundedStack {
         // ===== Creator =====
         /*
             สร้างแสตกว่างเปล่า
+            @param capacity ความจุสูงสุดของ stack ต้องมากกว่า 0
+            @throws IllegalArgumentException ถ้า capacity <= 0
         */
        public BoundedStack(int capacity) {
         if (capacity <= 0) throw new IllegalArgumentException();
@@ -80,6 +82,12 @@ public class BoundedStack {
         // ===== Creator 2 =====
         /*
             สร้างแสตกจาก list ที่มีอยู่แล้ว
+        @param capacity ต้อง >0 namebook ต้อง != null และ size <= capacity
+        @throws IllegalArgumentException ถ้า capacity  <= 0
+        @throws IllegalArgumentException ถ้า namebook = null
+        @throws IllegalArgumentException ถ้า namebook.size > capacity
+        @throws IllegalArgumentException ถ้า เพิ่มbook ที่เป็น null หรือ empty
+
          */
          public BoundedStack(List<String> nameBook, int capacity) {
          if (capacity <= 0) throw new IllegalArgumentException(); // เหตุผลเดียวกับ constructor แรก
@@ -131,6 +139,10 @@ public class BoundedStack {
 
 
         //  =====Observers =====
+        /*
+        @return สมาชิกบนสุดของ stack
+        @throws IllegalStateException ถ้า stack ว่าง
+        */
         public String peek(){
             if(book.isEmpty()) throw new IllegalStateException();
             return book.get(book.size()-1);
@@ -167,10 +179,10 @@ public class BoundedStack {
             @throws IllegalArgumentException ถ้า newCapacity น้อยกว่าจำนวนหนังสือที่มีอยู่
         */
        
-        // public BoundedStack copy(int newCapacity) {
-        //     if (newCapacity <= 0) throw new IllegalArgumentException();
-        //     return new BoundedStack(this.book, newCapacity);
-        // }
+        public BoundedStack copy(int newCapacity) {
+             if (newCapacity <= 0) throw new IllegalArgumentException();
+             return new BoundedStack(this.book, newCapacity);
+         }
 
         
 }
